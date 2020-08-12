@@ -12,8 +12,15 @@ public class HeapSort {
     public static  void HeapSort (int [] arr) {
         CreateHeap (arr);//用数组去建立一个大堆
         for(int i =0;i<arr.length-1;i++) {
-            swap(arr,0,arr.length-i-1);
-            shiftdown(arr,arr.length-i-1,0);
+            swap(arr,0,arr.length-i-1);//交换堆顶 和堆的最后一个元素
+            shiftdown(arr,arr.length-i-1,0);//向下调整
+        }
+    }
+    public  static  void heap(int[] arr) {
+        createheap(arr) ;
+        for (int i =0; i<arr.length-1;i++) {
+            swap(arr,0,arr.length-1-i);
+            shiftdown(arr,arr.length-1-i,0);
         }
     }
 
@@ -21,7 +28,7 @@ public class HeapSort {
          int parent = index;
          int child = 2*parent +1;
          while (child < heaplength){
-             if (child + 1 <heaplength && arr[child+1]>arr[child]) {
+             if (child + 1 < heaplength && arr[child+1]>arr[child]) {
                  child = child +1;
              }
              if (arr[child] > arr[parent]) {
@@ -34,23 +41,78 @@ public class HeapSort {
 
     }
     }
+    public static  void shift(int[] arr,int heaplength,int index) {
+        int parent = index;
+        int child = 2*parent +1;
+        while (child<heaplength) {
+            if (child + 1<heaplength&&arr[child+1] > arr[child]) {
+                child = child+1;
+            }
+            if (arr[child] > arr[parent]) {
+                swap(arr,child,parent);
+            }else{
+                break;
+            }
+            parent = child;
+            child = 2* parent+1;
+        }
+    }
 
-    private static void swap(int[] arr, int child, int parent) {
+
+    public static void swap(int[] arr, int child, int parent) {
         int tmp = arr[child];
         arr[child] = arr[parent];
         arr[parent] = tmp;
     }
+
 
     private static void CreateHeap(int[] arr) {
          for (int i =(arr.length-1-1)/2;i>=0;i--) {
              shiftdown(arr,arr.length,i);
          }
     }
+    private static  void createheap(int[] arr) {
+        for (int i = (arr.length-1-1)/2;i>=0;i++) {
+            shiftdown(arr,arr.length,i);
+        }
+     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         int [] arr = {2,1,9,6,5,8,3,3,77};
-        HeapSort(arr);
+        heapsort1(arr);
         System.out.println(Arrays.toString(arr));
+
+    }
+    public static  void heapsort1 (int [] arr) {
+        createheap1(arr);
+        for (int i =0;i<arr.length-1;i++) {
+            swap(arr,arr.length-i-1,0);
+            shiftdown(arr,arr.length-i-1,0);
+        }
+
+    }
+
+    private static void createheap1(int[] arr) {
+        for (int i = (arr.length-1-1)/2;i>=0;i--) {
+            shiftdown1(arr,arr.length,i);
+        }
+    }
+
+    private static void shiftdown1(int[] arr, int length, int index) {
+        int parent = index;
+        int child = 2*parent+1;
+        while (child<length) {
+            if (child+1 <length && arr[child+1]>arr[child]) {
+                child =child+1;
+            }
+            if (arr[child]>arr[parent]) {
+                swap(arr,child,parent);
+            }else{
+                break;
+            }
+            parent = child;
+            child = 2*parent+1;
+        }
 
     }
 
