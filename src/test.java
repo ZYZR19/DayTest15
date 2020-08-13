@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * Created with IntelliJ IDEA.
@@ -152,14 +153,152 @@ public class test {
   }
 
 
+
+
+  //快速排序
+    public static  void  quickSort (int [] arr) {
+        quickSortHelper(arr,0,arr.length-1) ;
+    }
+
+    private static void quickSortHelper(int[] arr, int left,int right) {
+        if (left >= right)  {
+            return;//数组为空
+        }
+        int index = partition(arr,left,right) ;
+        quickSortHelper(arr,left,index-1);
+        quickSortHelper(arr,index+1,right);
+    }
+
+    private static int partition(int[] arr, int left, int right) {
+        int i= left;
+        int j = right;
+        int base = arr[right];
+        while (i<j) {
+            while (i<j&&arr[i]<=base) {
+                i++;
+            }
+            while(i<j&&arr[j]>base) {
+                j--;
+            }
+            swap(arr,i,j);
+
+        }
+        swap(arr,i,right);
+        return i;
+    }
+
+
+
+
+
+    //非递归快排序
+    public static  void quickSort2 (int[ ] arr) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(arr.length-1);
+        stack.push(0);
+        while (!stack.isEmpty()) {
+            int left = stack.pop();
+            int right = stack.pop();//取和入的顺序要相反
+            if (left>=right) {
+                continue;
+            }
+            int index = partition(arr,left,right);
+            stack.push(right);
+            stack.push(index+1);
+            stack.push(index-1);
+            stack.push(left);
+        }
+    }
+
+
+
+    //归并排序
+    public  static  void  merge(int[] arr,int low ,int mid, int high) {//把两个有序区间合并成一个
+        int output[] =new int[high-low];//创建空间
+        int outputindex = 0;//记录数组放了多少个元素
+        int cur1 = low;
+        int cur2 = mid;
+        while (cur1<mid&& cur2<high) {
+             if (arr[cur1] <= arr[cur2]) {
+                 output[outputindex] = arr[cur1];//如果两个有序区间的对应位置比较 把小的拿出来 放在第一个
+                 outputindex++;
+                 cur1++;
+             }else {
+                 output[outputindex] = arr[cur2];
+                 outputindex++;
+                 cur2++;
+             }
+        }
+        //循环结束 一定有一个先到达空间的末尾 另一个剩下的就全部拷贝到空间中
+        //是左边数组的cur1没有先到最后
+        while (cur1<mid) {
+            output[outputindex] = arr[cur1];
+            outputindex++;
+            cur1++;
+        }
+        //右边数组有剩下
+        while (cur2<high) {
+            output[outputindex] = arr[cur2];
+            outputindex++;
+            cur2++;
+        }
+        //再把output中的拷贝到原来数组
+        for (int i =0;i<high-low;i++) {
+            arr[low+i] = output[i];
+        }
+
+    }
+    public static void mergeSort (int[] arr) {
+        mergeHelper(arr,0,arr.length); //这是个前闭后开的区间
+    }
+
+    private static void mergeHelper(int[] arr, int low, int high) {
+        if (high-low<=1) {
+            //区间只有一个或者0个元素 不用排序
+            return;
+        }
+        int mid = (low+high) /2;
+        mergeHelper(arr, low, mid);
+        mergeHelper(arr,mid,high);
+        //此时左右区间已经有序
+        merge(arr,low,mid,high);//进行区间合并
+    }
+
+
+
+
+
+    //非递归版本的归并
+    public static  void mergeSort2 (int[] arr) {
+        for (int gap = 1; gap<arr.length; gap*=2) {
+            for ( int i = 0;i<arr.length;i=i+2*gap) {
+                int beg = i;
+                int mid =i+gap;
+                int end = i+2*gap;
+                if (mid>=arr.length) {
+                    mid = arr.length;
+                }
+                if (end>arr.length) {
+                    end = arr.length;
+                }
+                merge(arr,beg,mid,end);
+            }
+        }
+    }
+
+
+
+
     public static void main(String[] args) {
-        int[] arr= {9,5,3,6,7,8};
+     /*   int[] arr= {9,5,3,6,7,8};
         insertSort(arr);
-        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(arr));*/
         int[] array = {9,2,7,4,3,7,12,9};
-        shellSort(array);
+        /*shellSort(array);
         System.out.println(Arrays.toString(array));
         heapSort(arr);
-        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(arr));*/
+        mergeSort2(array);
+        System.out.println(Arrays.toString(array));
     }
 }
